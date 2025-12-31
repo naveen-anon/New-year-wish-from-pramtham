@@ -1,17 +1,46 @@
-const text = document.getElementById("text");
-const circle = document.querySelector(".circle");
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
 
-function playAnim() {
-  circle.style.animationPlayState = "running";
-  text.style.animationPlayState = "running";
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+let particles = [];
+
+for (let i = 0; i < 120; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 2 + 1,
+    dx: (Math.random() - 0.5) * 0.8,
+    dy: (Math.random() - 0.5) * 0.8
+  });
 }
 
-function resetAnim() {
-  circle.style.animation = "none";
-  text.style.animation = "none";
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  setTimeout(() => {
-    circle.style.animation = "rotate 6s linear infinite";
-    text.style.animation = "glow 2s ease-in-out infinite alternate";
-  }, 100);
+  particles.forEach(p => {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = "#00f2ff";
+    ctx.fill();
+
+    p.x += p.dx;
+    p.y += p.dy;
+
+    if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+  });
+
+  requestAnimationFrame(animate);
 }
+
+animate();
+
+function boost() {
+  document.querySelector(".energy-ring").style.animationDuration = "1.5s";
+}
+
+function reset() {
+  document.querySelector(".energy-ring").style.animationDuration = "4s";
+  }
