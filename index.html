@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy New Year 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Bilbo+Swash+Caps&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --main:#ff6fae;
+  --glow:#ffb3e6;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#000;
+  font-family:'Poppins',sans-serif;
+}
+
+canvas{
+  position:absolute;
+  inset:0;
+}
+
+.popup-container{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  z-index:10;
+  width:90%;
+  max-width:900px;
+}
+
+.popup-bg{
+  position:absolute;
+  inset:0;
+  border-radius:70px;
+  background:radial-gradient(circle,var(--main),rgba(20,0,40,.9));
+  filter:blur(1px);
+  z-index:-1;
+}
+
+.popup-title{
+  font-family:'Bilbo Swash Caps',cursive;
+  font-size:clamp(56px,10vw,110px);
+  background:linear-gradient(90deg,#fff,var(--glow),var(--main));
+  -webkit-background-clip:text;
+  color:transparent;
+  text-shadow:0 0 40px var(--main);
+}
+
+#name::after{
+  content:"|";
+  animation:blink 1s infinite;
+}
+
+@keyframes blink{
+  0%,50%,100%{opacity:1}
+  25%,75%{opacity:0}
+}
+
+.popup-subtitle{
+  font-size:clamp(18px,4vw,36px);
+  color:#ffe6f7;
+  margin-top:10px;
+}
+
+.popup-signature{
+  margin-top:18px;
+  font-size:clamp(16px,3vw,28px);
+  color:var(--glow);
+  opacity:0;
+  animation:fadeUp 2s ease forwards;
+  animation-delay:3.5s;
+}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(15px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+#theme-switch{
+  position:absolute;
+  top:20px;
+  right:20px;
+  z-index:20;
+}
+
+#theme-switch button{
+  background:none;
+  border:none;
+  font-size:26px;
+  margin-left:10px;
+  cursor:pointer;
+}
+
+#music-hint{
+  position:absolute;
+  bottom:20px;
+  right:20px;
+  color:#ffd6f0;
+  opacity:.8;
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{opacity:.4}
+  50%{opacity:1}
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div class="popup-container">
+  <div class="popup-bg"></div>
+  <div class="popup-title">
+    Happy New Year <span id="name"></span>
+  </div>
+  <div class="popup-subtitle">
+    May 2026 be filled with love & light ✨
+  </div>
+  <div class="popup-signature">
+    — From Your Forever 💖
+  </div>
+</div>
+
+<div id="theme-switch">
+  <button onclick="setTheme('pink')">💖</button>
+  <button onclick="setTheme('gold')">✨</button>
+  <button onclick="setTheme('purple')">💜</button>
+</div>
+
+<div id="music-hint">🔊 Tap anywhere for music</div>
+
+<audio id="bg-music" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/10/25/audio_cfa3b41f2c.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* ---------------- MUSIC ---------------- */
+const music=document.getElementById("bg-music");
+const hint=document.getElementById("music-hint");
+
+function startMusic(){
+  music.volume=0;
+  music.play().catch(()=>{});
+  let v=0;
+  const fade=setInterval(()=>{
+    v+=0.01;
+    music.volume=Math.min(v,.25);
+    if(v>=.25)clearInterval(fade);
+  },120);
+  hint.style.display="none";
+  window.removeEventListener("click",startMusic);
+}
+window.addEventListener("click",startMusic);
+
+/* ---------------- NAME TYPING ---------------- */
+const userName="My Love 💖"; // ✏️ CHANGE NAME HERE
+const nameEl=document.getElementById("name");
+let i=0;
+
+function typeName(){
+  if(i<userName.length){
+    nameEl.textContent+=userName[i++];
+    setTimeout(typeName,150);
+  }else{
+    setTimeout(()=>textFirework(userName),800);
+  }
+}
+setTimeout(typeName,1200);
+
+/* ---------------- THEME SWITCH ---------------- */
+function setTheme(t){
+  const r=document.documentElement;
+  if(t==="pink"){
+    r.style.setProperty("--main","#ff6fae");
+    r.style.setProperty("--glow","#ffb3e6");
+  }
+  if(t==="gold"){
+    r.style.setProperty("--main","#ffd700");
+    r.style.setProperty("--glow","#fff1a8");
+  }
+  if(t==="purple"){
+    r.style.setProperty("--main","#a45dff");
+    r.style.setProperty("--glow","#d2b7ff");
+  }
+}
+
+/* ---------------- CANVAS FIREWORKS ---------------- */
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+let W,H;
+function resize(){
+  W=canvas.width=window.innerWidth;
+  H=canvas.height=window.innerHeight;
+}
+window.addEventListener("resize",resize);
+resize();
+
+const particles=[];
+function textFirework(text){
+  const off=document.createElement("canvas");
+  off.width=W;
+  off.height=H;
+  const octx=off.getContext("2d");
+  octx.fillStyle="#fff";
+  octx.font="bold 140px Poppins";
+  octx.textAlign="center";
+  octx.fillText(text,W/2,H/2);
+  const data=octx.getImageData(0,0,W,H).data;
+
+  for(let y=0;y<H;y+=6){
+    for(let x=0;x<W;x+=6){
+      if(data[(y*W+x)*4+3]>150 && Math.random()<.02){
+        particles.push({
+          x,y,
+          vx:(Math.random()-.5)*4,
+          vy:(Math.random()-.5)*4,
+          a:1,
+          c:getComputedStyle(document.documentElement).getPropertyValue("--main")
+        });
+      }
+    }
+  }
+}
+
+function animate(){
+  ctx.clearRect(0,0,W,H);
+  for(let i=particles.length-1;i>=0;i--){
+    const p=particles[i];
+    p.x+=p.vx;
+    p.y+=p.vy;
+    p.vy+=.03;
+    p.a-=.02;
+    if(p.a<=0){particles.splice(i,1);continue;}
+    ctx.globalAlpha=p.a;
+    ctx.fillStyle=p.c;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,2.5,0,Math.PI*2);
+    ctx.fill();
+  }
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+</body>
+  </html>
