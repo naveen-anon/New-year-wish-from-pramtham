@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy New Year</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <canvas id="particles"></canvas>
+
+  <!-- LOGIN PAGE -->
+  <div class="login" id="loginBox">
+    <h2>WELCOME 🎆</h2>
+    <input type="text" id="username" placeholder="Enter your name">
+    <button onclick="login()">ENTER</button>
+  </div>
+
+  <!-- MAIN PAGE -->
+  <div class="main hidden" id="mainBox">
+    <div class="energy-ring"></div>
+    <h1 class="title">
+      HAPPY NEW YEAR<br>
+      <span id="showName"></span>
+    </h1>
+
+    <div class="controls">
+      <button onclick="boost()">BOOST</button>
+      <button onclick="reset()">RESET</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
